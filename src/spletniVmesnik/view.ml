@@ -37,8 +37,8 @@ let svg_daljica ?(a = []) zacetek konec =
     ~a:
       ([
          int_of_float_attr "x1" zacetek.x;
-         int_of_float_attr "y1" zacetek.y;
          int_of_float_attr "x2" konec.x;
+         int_of_float_attr "y1" zacetek.y;
          int_of_float_attr "y2" konec.y;
        ]
       @ a)
@@ -79,8 +79,11 @@ let svg_oznaka ?(a = []) polozaj besedilo =
     [ text besedilo ]
 
 let prikaz_stanja model q =
-  let avtomat = ZagnaniAvtomat.avtomat model.avtomat in
-  let polozaj = polozaj_stanja model q in
+  let avtomat = match model.avtomat with
+    | Some a -> ZagnaniAvtomat.avtomat a
+    | None -> failwith "Avtomat ni inicializiran"
+  in
+  let polozaj = {x = q.x; y = q.y} in
   let barva_robu =
     if q = Avtomat.zacetno_stanje avtomat then Parametri.barva_zacetnega_stanja
     else if Avtomat.je_sprejemno_stanje avtomat q then
@@ -172,7 +175,10 @@ let prikaz_prehoda zacetek konec oznaka =
     ]
 
 let prikaz_traku model =
-  let trak = ZagnaniAvtomat.trak model.avtomat in
+  let trak = match model.avtomat with
+    | Some a -> ZagnaniAvtomat.trak a
+    | None -> failwith "Avtomat ni inicializiran"
+  in
   match model.nacin with
   | VnasanjeNiza ->
       elt "h2"
@@ -201,7 +207,10 @@ let prikaz_gumba_za_naslednji_znak model =
     [ text "preberi naslednji znak" ]
 
 let prikaz_avtomata model =
-  let avtomat = ZagnaniAvtomat.avtomat model.avtomat in
+  let avtomat = match model.avtomat with
+    | Some a -> ZagnaniAvtomat.avtomat a
+    | None -> failwith "Avtomat ni inicializiran"
+  in
   let stanja =
     List.map (prikaz_stanja model) (avtomat |> Avtomat.seznam_stanj)
   in
@@ -230,8 +239,8 @@ let prikaz_avtomata model =
     ~a:
       (a
       @ [
-          int_of_float_attr "width" model.sirina;
-          int_of_float_attr "height" model.visina;
+          int_of_float_attr "width" 500.;
+          int_of_float_attr "height" 500.;
           int_of_float_attr "stroke-width" Parametri.debelina_crt;
         ])
     (prehodi @ stanja)

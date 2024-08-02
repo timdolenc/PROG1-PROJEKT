@@ -39,3 +39,9 @@ val generiraj_vsa_stanja : int -> int -> Stanje.t list
 
 (* Funkcija, ki generira vse prehode za avtomat *)
 val generiraj_vse_prehode : int -> int -> (Stanje.t * char * Stanje.t) list
+
+(* Nastavi izhodno funkcijo, ki vrne izhod na podlagi stanja in vhoda *)
+val nastavi_izhodno_funkcijo : ((Stanje.t * char) -> string) -> t -> t
+
+(* Vrne izhod izhodne funkcije na podlagi stanja in vhoda *)
+val izhodna_funkcija : t -> Stanje.t -> char -> string

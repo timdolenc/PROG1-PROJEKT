@@ -1,65 +1,48 @@
 open Definicije
 
-type nacin = PrivzetNacin | VnasanjeNiza | PremikanjeVozlisca of Stanje.t
+(* Definicija načinov delovanja vmesnika *)
+type nacin = VnosDimenzij | Premikanje
 
+(* Definicija modela *)
 type model = {
-  avtomat : ZagnaniAvtomat.t;
-  polozaji : (Stanje.t * Vektor.t) list;
-  nacin : nacin;
-  sirina : float;
-  visina : float;
+  avtomat : ZagnaniAvtomat.t option;  (* Zagnani avtomat *)
+  max_x : int;                        (* Maksimalna x dimenzija mreže *)
+  max_y : int;                        (* Maksimalna y dimenzija mreže *)
+  nacin : nacin;                      (* Trenutni način delovanja *)
 }
 
-let init sirina visina avtomat =
-  let polozaji =
-    Vektor.koreni_enote
-      (List.length (Avtomat.seznam_stanj avtomat))
-      sirina visina
-    |> List.combine (Avtomat.seznam_stanj avtomat)
-  in
+(* Inicializacija modela *)
+let init max_x max_y =
   {
-    avtomat = ZagnaniAvtomat.pozeni avtomat Trak.prazen;
-    polozaji;
-    nacin = PrivzetNacin;
-    sirina;
-    visina;
+    avtomat = None;  (* Avtomat še ni inicializiran *)
+    max_x;
+    max_y;
+    nacin = VnosDimenzij;
   }
 
+(* Definicija sporočil *)
 type msg =
-  | PreberiNaslednjiZnak
-  | ZacniPremikVozlisca of Stanje.t
-  | PremakniVozlisce of Vektor.t
-  | KoncajPremikVozlisca
-  | ZacniVnosNiza
-  | VnesiNiz of string
+  | NastaviDimenzije of int * int (* Nastavi dimenzije mreže *)
+  | Premakni of char              (* Premik avtomata z ukazom (N, L, D) *)
+  | PreveriStanje                 (* Preveri, če je avtomat v sprejemnem stanju *)
 
-let polozaj_stanja model q = List.assoc q model.polozaji
-
+(* Posodobitev modela glede na prejeto sporočilo *)
 let update model = function
-  | PreberiNaslednjiZnak -> (
-      match ZagnaniAvtomat.korak_naprej model.avtomat with
-      | None -> model
-      | Some avtomat' -> { model with avtomat = avtomat' })
-  | ZacniPremikVozlisca q -> { model with nacin = PremikanjeVozlisca q }
-  | PremakniVozlisce position -> (
-      match model.nacin with
-      | PremikanjeVozlisca q ->
-          let polozaji =
-            List.map
-              (fun (q', position') ->
-                (q', if q = q' then position else position'))
-              model.polozaji
-          in
-          { model with polozaji }
-      | _ -> model)
-  | KoncajPremikVozlisca -> { model with nacin = PrivzetNacin }
-  | ZacniVnosNiza -> { model with nacin = VnasanjeNiza }
-  | VnesiNiz vneseni_niz ->
+  | NastaviDimenzije (x, y) ->
+      let avtomat = Avtomat.premik_na_koordinate x y in
       {
-        model with
-        avtomat =
-          ZagnaniAvtomat.pozeni
-            (ZagnaniAvtomat.avtomat model.avtomat)
-            (Trak.iz_niza vneseni_niz);
-        nacin = PrivzetNacin;
+        avtomat = Some (ZagnaniAvtomat.pozeni avtomat Trak.prazen);
+        max_x = x;
+        max_y = y;
+        nacin = Premikanje;
       }
+  | Premakni ukaz -> (
+      match model.avtomat with
+      | None -> model
+      | Some avtomat -> (
+          let trak = Trak.iz_niza (String.make 1 ukaz) in
+          let avtomat' = ZagnaniAvtomat.pozeni (ZagnaniAvtomat.avtomat avtomat) trak in
+          match ZagnaniAvtomat.korak_naprej avtomat' with
+          | None -> model
+          | Some avtomat'' -> { model with avtomat = Some avtomat'' }))
+  | PreveriStanje -> model  (* Dodamo logiko za preverjanje stanja v naslednji datoteki *)
