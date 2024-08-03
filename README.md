@@ -104,3 +104,4 @@ Datoteka `tekstovniVmesnik.ml` vsebuje implementacijo tekstovnega vmesnika za in
 - `view`: Funkcija za upravljanje pogleda vmesnika.
 - `init`: Funkcija za inicializacijo modela.
 - `loop`: Glavna zanka vmesnika.
+
