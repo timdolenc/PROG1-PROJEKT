@@ -2,21 +2,22 @@
 
 Projekt vsebuje implementacijo Mealyjevega avtomata in njegovo aplikacijo na preprost sprehod po dvodimenzionalni mreži, kjer je izhod smer neba. 
 
-Projekt vsebuje implementacijo končnih avtomatov, enega najpreprostejših računskih modelov, ter njihovo uporabo pri karakterizaciji nizov. Končni avtomat začne v enem izmed možnih stanj, nato pa glede na trenutno stanje in trenutni simbol preide v neko novo stanje. Če ob pregledu celotnega niza konča v enem od sprejemnih stanj, je niz sprejet, sicer pa ni.
+Mealyjev avtomat začne v enem izmed možnih stanj, nato pa glede na trenutno stanje in trenutni vhod preide v neko novo stanje in ob tem sproducira nek izhod. Če ob pregledu celotnega niza konča v enem od sprejemnih stanj, je z nizom ukazov uporabnik uspešno prišel na cilj, sicer neuspešno.
 
-Za tekoči primer si oglejmo avtomat, ki sprejema nize, sestavljene iz ničel in enic, v katerih da vsota enic pri deljenju s 3 ostanek 1. Tak avtomat predstavimo z naslednjim diagramom, na katerem je začetno stanje označeno s puščico, sprejemna stanja pa so dvojno obkrožena.
+Avtomat se implementira na primeru sprehoda po dvodimenzionalni mreži, kjer se uporabnik z nizom ukazov sestavljenim iz "N" (naredi en korak naprejnaprej), "D" (na mestu se obrni na desno) in "L" (na mestu se obrni na levo) poskuša prebiti do cilja, ki se nahaja v zgornji desni točki mreže (max_x, max_y). Slednje koordinate ima uporabnik možnost spreminjati.
 
-TODO
 
-## Matematična definicija
+## Definicija Mealyjevega avtomata
 
-Končni avtomat je definiran kot nabor $(\Sigma, Q, q_0, F, \delta)$, kjer so:
+Mealyjev avtomat je nabor $(\Sigma, Q, q_0, F, \delta)$, kjer so:
 
 - $\Sigma$ množica simbolov oz. abeceda,
 - $Q$ množica stanj,
 - $q_0 \in Q$ začetno stanje,
 - $F \subseteq Q$ množica sprejemnih stanj in
 - $\delta : Q \times \Sigma \to Q$ prehodna funkcija.
+- $\lambda : Q \times \Sigma \to \Gamma$ izhodna funkcija
+- $\Gamma$ množica izhodov
 
 Na primer, zgornji končni avtomat predstavimo z naborom $(\{0, 1\}, \{q_0, q_1, q_2\}, q_0, \{q_1\}, \delta)$, kjer je $\delta$ podana z naslednjo tabelo:
 
