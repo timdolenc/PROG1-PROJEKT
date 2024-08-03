@@ -27,13 +27,6 @@ Tekstovni vmesnik zaženemo z vnosom naslednjih korakov v terminal:
 #3. dune exec ./tekstovniVmesnik.exe 
 
 
-Če OCamla nimate nameščenega, lahko še vedno preizkusite tekstovni vmesnik prek ene od spletnih implementacij OCamla, najbolje <http://ocaml.besson.link/>, ki podpira branje s konzole. V tem primeru si na vrh datoteke `tekstovniVmesnik.ml` dodajte še vrstice
-
-```ocaml
-module Avtomat = struct
-    (* celotna vsebina datoteke avtomat.ml *)
-end
-```
 
 ### Tekstovni vmesnik
 Tekstovni vmesnik ob zagonu uporabniku ponuja štiri možnosti:
