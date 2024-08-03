@@ -1,48 +1,25 @@
-open Definicije
+open Avtomat
 
-(* Definicija načinov delovanja vmesnika *)
-type nacin = VnosDimenzij | Premikanje
-
-(* Definicija modela *)
 type model = {
-  avtomat : ZagnaniAvtomat.t option;  (* Zagnani avtomat *)
-  max_x : int;                        (* Maksimalna x dimenzija mreže *)
-  max_y : int;                        (* Maksimalna y dimenzija mreže *)
-  nacin : nacin;                      (* Trenutni način delovanja *)
+  avtomat : t;
+  stanje_avtomata : Stanje.t;
+  max_x : int;
+  max_y : int;
 }
 
-(* Inicializacija modela *)
 let init max_x max_y =
+  let avtomat = Avtomat.premik_na_koordinate max_x max_y in
   {
-    avtomat = None;  (* Avtomat še ni inicializiran *)
+    avtomat;
+    stanje_avtomata = Avtomat.zacetno_stanje avtomat;
     max_x;
     max_y;
-    nacin = VnosDimenzij;
   }
 
-(* Definicija sporočil *)
-type msg =
-  | NastaviDimenzije of int * int (* Nastavi dimenzije mreže *)
-  | Premakni of char              (* Premik avtomata z ukazom (N, L, D) *)
-  | PreveriStanje                 (* Preveri, če je avtomat v sprejemnem stanju *)
+let premakni_avtomat model ukaz =
+  match Avtomat.prehodna_funkcija model.avtomat model.stanje_avtomata ukaz with
+  | None -> model
+  | Some novo_stanje -> { model with stanje_avtomata = novo_stanje }
 
-(* Posodobitev modela glede na prejeto sporočilo *)
-let update model = function
-  | NastaviDimenzije (x, y) ->
-      let avtomat = Avtomat.premik_na_koordinate x y in
-      {
-        avtomat = Some (ZagnaniAvtomat.pozeni avtomat Trak.prazen);
-        max_x = x;
-        max_y = y;
-        nacin = Premikanje;
-      }
-  | Premakni ukaz -> (
-      match model.avtomat with
-      | None -> model
-      | Some avtomat -> (
-          let trak = Trak.iz_niza (String.make 1 ukaz) in
-          let avtomat' = ZagnaniAvtomat.pozeni (ZagnaniAvtomat.avtomat avtomat) trak in
-          match ZagnaniAvtomat.korak_naprej avtomat' with
-          | None -> model
-          | Some avtomat'' -> { model with avtomat = Some avtomat'' }))
-  | PreveriStanje -> model  (* Dodamo logiko za preverjanje stanja v naslednji datoteki *)
+let je_sprejemno_stanje model =
+  Avtomat.je_sprejemno_stanje model.avtomat model.stanje_avtomata

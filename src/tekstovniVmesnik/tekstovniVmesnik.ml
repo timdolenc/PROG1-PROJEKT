@@ -65,8 +65,8 @@ let update model = function
 
 (* Funkcija za izpis možnosti vmesnika *)
 let rec izpisi_moznosti () =
-  print_endline "1) izpiši avtomat";  (* Možnost za izpis avtomata *)
-  print_endline "2) beri znake";      (* Možnost za branje niza ukazov *)
+  print_endline "1) izpiši stanja avtomata";  (* Možnost za izpis avtomata *)
+  print_endline "2) začni sprehod";      (* Možnost za branje niza ukazov *)
   print_endline "3) nastavi na začetno stanje";  (* Možnost za ponastavitev avtomata *)
   print_endline "4) nastavi dimenzije mreže";  (* Možnost za nastavljanje dimenzij *)
   print_string "> ";  (* Izpis poziva za vnos uporabnika *)
@@ -104,8 +104,8 @@ let izpisi_rezultat model =
   let koncno_stanje = model.stanje_avtomata in
   Printf.printf "Končno stanje: %s\n" (Stanje.v_niz koncno_stanje);  (* Izpiši končno stanje *)
   if je_sprejemno_stanje model.avtomat koncno_stanje then
-    print_endline "Niz je bil sprejet"  (* Niz je bil sprejet *)
-  else print_endline "Niz ni bil sprejet";  (* Niz ni bil sprejet *)
+    print_endline "Uspešen prihod na cilj!"  (* Niz je bil sprejet *)
+  else print_endline "Niste prišli na cilj:(";  (* Niz ni bil sprejet *)
   Printf.printf "Izhod: %s\n" (Avtomat.izhodna_funkcija model.avtomat koncno_stanje ' ')
 
 (* Funkcija za nastavljanje dimenzij mreže *)

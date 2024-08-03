@@ -1,17 +1,20 @@
-let app =
-  Vdom.simple_app
-    ~init:(Model.init 500 500)
-    ~view:View.view ~update:Model.update ()
+open Js_of_ocaml
+open Js_of_ocaml_tyxml
+open Model
+open View
 
 let () =
-  let open Js_browser in
-  let run () =
-    let element = match
-      Js_browser.Document.get_element_by_id Js_browser.document "app" with
-      | None -> Js_browser.Document.document_element Js_browser.document
-      | Some el -> el
-    in
-    Vdom_blit.run app |> Vdom_blit.dom
-    |> Js_browser.Element.append_child element
+  let max_x_input = Dom_html.getElementById_coerce "max_x" Dom_html.CoerceTo.input in
+  let max_y_input = Dom_html.getElementById_coerce "max_y" Dom_html.CoerceTo.input in
+  let create_button = Dom_html.getElementById "createGrid" in
+
+  let create_grid _ =
+    let max_x = int_of_string (Js.to_string max_x_input##.value) in
+    let max_y = int_of_string (Js.to_string max_y_input##.value) in
+    let model = Model.init max_x max_y in
+    init_view model;
+    Dom_html.window##.onkeydown := Dom_html.handler (handle_keydown model);
+    Js._false
   in
-  Window.set_onload window run
+
+  create_button##.onclick := Dom_html.handler create_grid
