@@ -9,7 +9,7 @@ Avtomat se implementira na primeru sprehoda po dvodimenzionalni mreži, kjer se 
 
 ## Definicija Mealyjevega avtomata
 
-Mealyjev avtomat je nabor $(\Sigma, Q, q_0, F, \delta)$, kjer so:
+Mealyjev avtomat je nabor $(\Sigma, Q, q_0, F, \delta, \lambda, \Gamma)$, kjer so:
 
 - $\Sigma$ množica simbolov oz. abeceda,
 - $Q$ množica stanj,
