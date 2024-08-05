@@ -22,9 +22,9 @@ Mealyjev avtomat je nabor $(\Sigma, Q, q_0, F, \delta, \lambda, \Gamma)$, kjer s
 
 ## Navodila za uporabo
 Tekstovni vmesnik zaženemo z vnosom naslednjih korakov v terminal:
-#1. cd pot_do_projekta
-#2. dune build
-#3. dune exec ./tekstovniVmesnik.exe 
+1) cd pot_do_projekta
+2) dune build
+3) dune exec ./tekstovniVmesnik.exe 
 
 
 
@@ -62,7 +62,7 @@ Projekt je organiziran v naslednje mape in datoteke:
 Datoteka `avtomat.ml` vsebuje implementacijo Mealyjevega avtomata, vključno s prehodno in izhodno funkcijo. Avtomat je definiran z naslednjimi tipi in funkcijami:
 
 - `type t`: Tip, ki predstavlja avtomat.
-- `praznen_avtomat`: Funkcija za ustvarjanje praznega avtomata.
+- `prazen_avtomat`: Funkcija za ustvarjanje praznega avtomata.
 - `dodaj_nesprejemno_stanje`: Funkcija za dodajanje nesprejemnega stanja.
 - `dodaj_sprejemno_stanje`: Funkcija za dodajanje sprejemnega stanja.
 - `dodaj_prehod`: Funkcija za dodajanje prehoda med stanji.
@@ -75,20 +75,28 @@ Datoteka `avtomat.ml` vsebuje implementacijo Mealyjevega avtomata, vključno s p
 - `generiraj_vsa_stanja`: Funkcija za generiranje vseh možnih stanj na mreži.
 - `generiraj_vse_prehode`: Funkcija za generiranje vseh možnih prehodov.
 
+
 ### `stanje.ml`
 
-Datoteka `stanje.ml` vsebuje model za upravljanje stanja aplikacije. Vključuje definicijo stanj vmesnika, modela in sporočil, ter funkcije za inicializacijo, posodobitev in upravljanje stanja.
+Datoteka `stanje.ml` vsebuje definicijo tipa stanja in funkcije za delo s stanji, ki vključujejo smer neba in koordinate na dvodimenzionalni mreži.
 
-- `type stanje_vmesnika`: Definicija možnih stanj vmesnika.
-- `type model`: Definicija modela, ki vsebuje avtomat, trenutno stanje avtomata, trenutno stanje vmesnika, ter dimenzije mreže.
-- `type msg`: Definicija sporočil, ki jih vmesnik uporablja za posodobitev stanja.
-- `update`: Funkcija za posodobitev modela glede na prejeto sporočilo.
-- `init`: Funkcija za inicializacijo modela.
+- `type smer_neba`: Definicija tipa za smer neba (S, J, V, Z).
+- `type t`: Definicija tipa stanja, ki vsebuje smer neba, x in y koordinate.
+- `iz_komponent`: Funkcija za ustvarjanje stanja iz posameznih komponent (smer, x, y).
+- `iz_niza`: Funkcija za ustvarjanje stanja iz niza v obliki "smer,x,y".
+- `v_niz`: Funkcija za pretvorbo stanja v niz v obliki "smer,x,y".
+- `smer`: Funkcija, ki vrne smer stanja.
+- `koordinate`: Funkcija, ki vrne koordinate stanja.
 
 ### `tekstovniVmesnik.ml`
 
 Datoteka `tekstovniVmesnik.ml` vsebuje implementacijo tekstovnega vmesnika za interakcijo z avtomatom. Vključuje funkcije za izpis možnosti, izpis avtomata, branje niza ukazov, izpis rezultata, nastavitev dimenzij mreže, in glavno zanko vmesnika.
 
+- `type stanje_vmesnika`: Definicija možnih stanj vmesnika.
+- `type model`: Definicija modela, ki vsebuje avtomat, trenutno stanje avtomata, trenutno stanje vmesnika, ter dimenzije mreže.
+- `type msg`: Definicija sporočil, ki jih vmesnik uporablja za posodobitev stanja.
+- `preberi_niz`: Funkcija za branje niza ukazov in izvajanje prehodov.
+- `update`: Funkcija za posodobitev modela glede na prejeto sporočilo.
 - `izpisi_moznosti`: Funkcija za izpis možnosti vmesnika.
 - `izpisi_avtomat`: Funkcija za izpis stanj avtomata.
 - `beri_niz`: Funkcija za branje niza ukazov od uporabnika.
